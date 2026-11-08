@@ -10,7 +10,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.suiverliverson"
+        applicationId = "com.example.livora"
         minSdk = 29
         targetSdk = 37
         versionCode = 1
@@ -57,5 +57,5 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:4.3.3")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation("com.google.zxing:core:3.5.3")
-
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }

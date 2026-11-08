@@ -47,7 +47,6 @@ fun HistoryScreen(deliveryManager: DeliveryManager, onBack: () -> Unit) {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        // الشريط العلوي مع زر العودة ⬅️
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = White)
@@ -63,7 +62,6 @@ fun HistoryScreen(deliveryManager: DeliveryManager, onBack: () -> Unit) {
 
         Spacer(Modifier.height(20.dp))
 
-        // ملخص عدد الطلبات المكتملة في السجل
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
@@ -77,7 +75,7 @@ fun HistoryScreen(deliveryManager: DeliveryManager, onBack: () -> Unit) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.History, contentDescription = null, tint = Red)
                     Spacer(Modifier.width(10.dp))
-                    Text("إجمالي الطلبات المكتملة", color = LightGray, fontSize = 14.sp)
+                    Text(s.totalCompleted, color = LightGray, fontSize = 14.sp)
                 }
                 Text("${deliveryManager.completedOrdersList.size}", color = Green, fontWeight = FontWeight.Bold, fontSize = 20.sp)
             }
@@ -126,7 +124,7 @@ fun HistoryScreen(deliveryManager: DeliveryManager, onBack: () -> Unit) {
                         Spacer(Modifier.height(8.dp))
                         Text("${completed.id} • ${completed.completedAt}", color = LightGray, fontSize = 12.sp)
                         Spacer(Modifier.height(6.dp))
-                        Text("من: ${completed.pickup} ➡️ إلى: ${completed.delivery}", color = LightGray.copy(alpha = 0.85f), fontSize = 12.sp)
+                        Text("${s.fromPickup.format(completed.pickup)} ➡️ ${s.toDelivery.format(completed.delivery)}", color = LightGray.copy(alpha = 0.85f), fontSize = 12.sp)
                     }
                 }
             }

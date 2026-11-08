@@ -40,6 +40,7 @@ import com.example.suiverliverson.ui.theme.AppSurface
 import com.example.suiverliverson.ui.theme.DarkGray
 import com.example.suiverliverson.ui.theme.Green
 import com.example.suiverliverson.ui.theme.LightGray
+import com.example.suiverliverson.ui.theme.PinkGradientStart
 import com.example.suiverliverson.ui.theme.Red
 import com.example.suiverliverson.ui.theme.White
 import kotlinx.coroutines.delay
@@ -47,13 +48,14 @@ import kotlinx.coroutines.delay
 @Composable
 fun StatsScreen() {
     val s = LocalStrings.current
-    var reviewsList by remember { mutableStateOf(initialReviewsList) }
+    val lang = LocalLang.current
+    var reviewsList by remember(lang) { mutableStateOf(getInitialReviewsList(lang)) }
 
-    // محاكاة حية لتلقي التقييمات
-    LaunchedEffect(Unit) {
+    // محاكاة حية لتلقي التقييمات باللغة المختارة
+    LaunchedEffect(lang) {
         while (true) {
             delay(12_000L)
-            val newRev = generateRandomReview()
+            val newRev = generateRandomReview(lang)
             reviewsList = listOf(newRev) + reviewsList
         }
     }
@@ -64,7 +66,6 @@ fun StatsScreen() {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        // العنوان مترجم
         Text(
             text = s.stats,
             color = White,
@@ -73,7 +74,6 @@ fun StatsScreen() {
         )
         Spacer(Modifier.height(16.dp))
 
-        // كارد التقييم الإجمالي مترجم
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
@@ -120,15 +120,25 @@ fun StatsScreen() {
             }
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(22.dp))
 
-        // الإنفوجرافيك الأسبوعي مترجم
-        Text(
-            text = s.weeklyInfographic,
-            color = White,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
+        // عنوان الأداء الأسبوعي المؤطر 🟣
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(20.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(PinkGradientStart)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = s.weeklyInfographic,
+                color = White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
         Spacer(Modifier.height(10.dp))
 
         Card(
@@ -151,7 +161,11 @@ fun StatsScreen() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+                    val days = when (lang) {
+                        "fr" -> listOf("Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim")
+                        "ar" -> listOf("إثن", "ثلا", "أرب", "خمي", "جمع", "سبت", "أحد")
+                        else -> listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+                    }
                     val heights = listOf(0.4f, 0.7f, 0.5f, 0.9f, 0.85f, 1.0f, 0.6f)
 
                     days.zip(heights).forEach { (day, height) ->
@@ -174,30 +188,24 @@ fun StatsScreen() {
             }
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(22.dp))
 
-        // التقييمات والتعليقات مترجمة
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        // عنوان آراء العملاء المؤطر 🟣 (بدون EN DIRECT)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(20.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(PinkGradientStart)
+            )
+            Spacer(Modifier.width(8.dp))
             Text(
                 text = s.customerReviews,
                 color = White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(Green)
-                )
-                Spacer(Modifier.width(6.dp))
-                Text(s.liveBadge, color = Green, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            }
         }
         Spacer(Modifier.height(10.dp))
 
@@ -205,6 +213,8 @@ fun StatsScreen() {
             ReviewCard(review)
             Spacer(Modifier.height(10.dp))
         }
+
+        Spacer(Modifier.height(40.dp))
     }
 }
 

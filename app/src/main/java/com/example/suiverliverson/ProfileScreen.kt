@@ -23,13 +23,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.DirectionsBike
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -68,7 +65,6 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-
 
 @Composable
 fun ProfessionalQrCode(data: String, modifier: Modifier = Modifier) {
@@ -133,13 +129,8 @@ fun ProfileScreen(
     val userBitmap = remember(account?.imageUri) {
         if (!account?.imageUri.isNullOrEmpty()) {
             try {
-                val pathStr = account!!.imageUri!!
-                if (pathStr.startsWith("content://")) {
-                    context.contentResolver.openInputStream(Uri.parse(pathStr))?.use {
-                        BitmapFactory.decodeStream(it)
-                    }
-                } else {
-                    BitmapFactory.decodeFile(pathStr)
+                context.contentResolver.openInputStream(Uri.parse(account!!.imageUri)).use {
+                    BitmapFactory.decodeStream(it)
                 }
             } catch (e: Exception) {
                 null
@@ -234,7 +225,6 @@ fun ProfileScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        // كارد الانتقال لصفحة السجل الكاملة
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -272,11 +262,8 @@ fun ProfileScreen(
             colors = CardDefaults.cardColors(containerColor = AppSurface)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                ProfileInfoRow(Icons.Default.Phone, "Téléphone / رقم الهاتف", account?.login ?: "+212 6 12 34 56 78")
-                ProfileInfoRow(Icons.Default.Email, "E-mail / البريد الإلكتروني", "${account?.firstName?.lowercase() ?: "driver"}@liverson.ma")
-                ProfileInfoRow(Icons.Default.Badge, s.licenseType, "Permis: ${account?.license ?: "B"}")
-                ProfileInfoRow(Icons.Default.Person, s.age, "${account?.age ?: 25} ans")
-                ProfileInfoRow(Icons.AutoMirrored.Filled.DirectionsBike, "Véhicule / الدراجة", "Scooter 125cc (الدار البيضاء 🇲🇦)")
+                ProfileInfoRow(Icons.Default.Email, s.emailPhone, account?.login ?: "driver@livora.ma")
+                ProfileInfoRow(Icons.Default.Person, s.ageLabel, "${account?.age ?: 25}")
             }
         }
 
@@ -318,7 +305,7 @@ fun ProfileScreen(
                     Spacer(Modifier.height(16.dp))
 
                     ProfessionalQrCode(
-                        data = "LIVERSON_DRIVER_${account?.id ?: "DRV1024"}",
+                        data = "LIVORA_DRIVER_${account?.id ?: "DRV1024"}",
                         modifier = Modifier.size(240.dp)
                     )
 
@@ -331,7 +318,7 @@ fun ProfileScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Red),
                         shape = RoundedCornerShape(16.dp)
                     ) {
-                        Text("Fermer / إغلاق", color = White, fontWeight = FontWeight.Bold)
+                        Text(s.close, color = White, fontWeight = FontWeight.Bold)
                     }
                 }
             }

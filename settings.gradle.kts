@@ -22,6 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Suiverliverson"
+rootProject.name = "Livora"
 include(":app")
- 

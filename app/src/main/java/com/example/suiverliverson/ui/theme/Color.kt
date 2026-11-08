@@ -2,15 +2,33 @@ package com.example.suiverliverson.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Blue = Color(0xFF007BFF)
-val Green = Color(0xFF28A745)
-val LightGray = Color(0xFFD3D3D3)
+// لوحة الألوان البنفسجية والنيون المطابقة للـ Screenshot 100% 🔮
+val MagentaPink = Color(0xFFFF2A85)
+val MagentaGradientEnd = Color(0xFFFF52A2)
+val NeonBlue = Color(0xFF2979FF)
+val ElectricCyan = Color(0xFF00E5FF)
+val NeonPurple = Color(0xFF7A38FF)
+val EmeraldGreen = Color(0xFF00E676)
+val BrightGold = Color(0xFFFFC107)
+
+val AppBackground = Color(0xFF0D081B)
+val AppSurface = Color(0xFF1B1133)
+val AppSurfaceVariant = Color(0xFF261845)
+val DarkGray = Color(0xFF33225A)
+
+val LightGray = Color(0xFF9E8DBA)
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
-val Red = Color(0xFFFF0000)
-val LightBlue = Color(0xFFE0F7FF)
-val DarkGray = Color(0xFF343A40)
 
-val AppBackground = Color(0xFF0D0D17)
-val AppSurface = Color(0xFF1A1A2B)
-val Purple = Color(0xFF7C5CFF)
+val PinkGradientStart = MagentaPink
+val PinkGradientEnd = MagentaGradientEnd
+val BlueAccent = NeonBlue
+val PurpleAccent = NeonPurple
+val GreenAccent = EmeraldGreen
+val GoldAccent = BrightGold
+
+val Red = MagentaPink
+val Green = EmeraldGreen
+val Blue = NeonBlue
+val Purple = NeonPurple
+val Gold = BrightGold

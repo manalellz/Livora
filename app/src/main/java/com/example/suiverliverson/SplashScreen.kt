@@ -11,9 +11,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -38,24 +40,25 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.suiverliverson.ui.theme.AppBackground
-import com.example.suiverliverson.ui.theme.LightGray
 import com.example.suiverliverson.ui.theme.Red
 import com.example.suiverliverson.ui.theme.White
 
 @Composable
-fun LiversonLogo(iconSize: Dp = 110.dp, textSize: TextUnit = 44.sp) {
+fun LiversonLogo(iconSize: Dp = 140.dp, textSize: TextUnit = 46.sp) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painter = painterResource(R.drawable.logo),
-            contentDescription = null,
+            contentDescription = "App Splash Logo",
             modifier = Modifier
-                .height(iconSize)
-                .offset(x = -iconSize * 0.25f)
+                .size(iconSize)
+                .clip(CircleShape),
+            contentScale = ContentScale.Fit
         )
+        Spacer(Modifier.height(16.dp))
         Text(
             text = buildAnnotatedString {
-                withStyle(SpanStyle(color = White)) { append("Liver") }
-                withStyle(SpanStyle(color = Red)) { append("son") }
+                withStyle(SpanStyle(color = White)) { append("Liv") }
+                withStyle(SpanStyle(color = Red)) { append("ora") }
             },
             fontSize = textSize,
             fontWeight = FontWeight.Bold,
@@ -109,7 +112,7 @@ fun SplashScreen(onFinished: () -> Unit) {
             }
             drawPath(
                 wave,
-                Brush.horizontalGradient(listOf(Red, Color(0xFFE8304F)))
+                Brush.horizontalGradient(listOf(Red, Color(0xFFFF5252)))
             )
         }
 
@@ -117,12 +120,13 @@ fun SplashScreen(onFinished: () -> Unit) {
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LiversonLogo(iconSize = 150.dp, textSize = 52.sp)
-            Spacer(Modifier.height(12.dp))
+            LiversonLogo(iconSize = 160.dp, textSize = 50.sp)
+            Spacer(Modifier.height(16.dp))
             Text(
-                text = LocalStrings.current.slogan.replace(". ", ".\n"),
-                color = LightGray,
+                text = LocalStrings.current.slogan.replace(", ", ",\n"),
+                color = Color(0xFFD4C2F0),
                 fontSize = 17.sp,
+                fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center
             )
         }
@@ -130,17 +134,17 @@ fun SplashScreen(onFinished: () -> Unit) {
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 28.dp)
-                .width(110.dp)
+                .padding(bottom = 36.dp)
+                .width(130.dp)
                 .height(4.dp)
                 .clip(RoundedCornerShape(2.dp))
-                .background(White.copy(alpha = 0.35f))
+                .background(White.copy(alpha = 0.25f))
         ) {
             Box(
                 Modifier
                     .fillMaxHeight()
-                    .width(110.dp * progress.value)
-                    .background(White)
+                    .width(130.dp * progress.value)
+                    .background(Red)
             )
         }
     }

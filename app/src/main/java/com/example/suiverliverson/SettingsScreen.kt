@@ -1,10 +1,5 @@
 package com.example.suiverliverson
 
-import android.graphics.BitmapFactory
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,15 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -32,6 +24,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -43,23 +36,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.suiverliverson.ui.theme.AppSurface
-import com.example.suiverliverson.ui.theme.DarkGray
-import com.example.suiverliverson.ui.theme.Green
+import com.example.suiverliverson.ui.theme.GreenAccent
 import com.example.suiverliverson.ui.theme.LightGray
-import com.example.suiverliverson.ui.theme.Red
+import com.example.suiverliverson.ui.theme.PinkGradientStart
+import com.example.suiverliverson.ui.theme.PurpleAccent
 import com.example.suiverliverson.ui.theme.White
 
 @Composable
 fun SettingsScreen(store: AccountStore, onBack: () -> Unit) {
     val s = LocalStrings.current
-    val context = LocalContext.current
     val account = store.current()
     val currentLang = LocalLang.current
     val setLang = LocalSetLang.current
@@ -67,173 +57,175 @@ fun SettingsScreen(store: AccountStore, onBack: () -> Unit) {
     var editFirstName by remember { mutableStateOf(account?.firstName ?: "") }
     var editLastName by remember { mutableStateOf(account?.lastName ?: "") }
     var editPhone by remember { mutableStateOf(account?.login ?: "") }
-    var editImageUri by remember { mutableStateOf<Uri?>(account?.imageUri?.let { Uri.parse(it) }) }
     var enableNotifs by remember { mutableStateOf(true) }
 
-    val photoPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        if (uri != null) editImageUri = uri
-    }
+    val fieldColors = OutlinedTextFieldDefaults.colors(
+        focusedContainerColor = Color(0xFF1D0E38),
+        unfocusedContainerColor = Color(0xFF1D0E38),
+        focusedBorderColor = PinkGradientStart,
+        unfocusedBorderColor = Color(0xFF4C2A8A),
+        focusedTextColor = White,
+        unfocusedTextColor = White,
+        cursorColor = PinkGradientStart
+    )
+    val pillShape = RoundedCornerShape(28.dp)
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color(0xFF0E071E), Color(0xFF160A2D))
+                )
+            )
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = White)
-            }
-            Spacer(Modifier.width(8.dp))
+        // زر العودة الفوق ف اليسار ⬅️
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier
+                .padding(top = 16.dp, start = 12.dp)
+                .align(Alignment.TopStart)
+        ) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = White)
+        }
+
+        // كارد الإعدادات المحاذي والمتساوي ف الوسط 🎯
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(Modifier.height(30.dp))
+
             Text(
                 text = s.settings,
                 color = White,
-                fontSize = 22.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
-        }
 
-        Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(24.dp))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurface)
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1B0E33))
             ) {
-                // الصورة الشخصية
-                Box(
-                    modifier = Modifier
-                        .size(90.dp)
-                        .clip(CircleShape)
-                        .background(DarkGray)
-                        .clickable { photoPicker.launch("image/*") },
-                    contentAlignment = Alignment.Center
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (editImageUri != null) {
-                        val bitmap = remember(editImageUri) {
-                            try {
-                                val pathStr = editImageUri.toString()
-                                if (pathStr.startsWith("content://")) {
-                                    context.contentResolver.openInputStream(editImageUri!!).use {
-                                        BitmapFactory.decodeStream(it)
-                                    }
-                                } else {
-                                    BitmapFactory.decodeFile(pathStr)
-                                }
-                            } catch (e: Exception) { null }
-                        }
-                        if (bitmap != null) {
-                            Image(
-                                bitmap = bitmap.asImageBitmap(),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                    } else {
-                        Icon(Icons.Default.AddAPhoto, contentDescription = null, tint = Red)
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = editFirstName,
-                    onValueChange = { editFirstName = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(s.firstName, color = LightGray) },
-                    colors = appFieldColors(),
-                    shape = RoundedCornerShape(12.dp)
-                )
-                Spacer(Modifier.height(10.dp))
-
-                OutlinedTextField(
-                    value = editLastName,
-                    onValueChange = { editLastName = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(s.lastName, color = LightGray) },
-                    colors = appFieldColors(),
-                    shape = RoundedCornerShape(12.dp)
-                )
-                Spacer(Modifier.height(10.dp))
-
-                OutlinedTextField(
-                    value = editPhone,
-                    onValueChange = { editPhone = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Téléphone / Phone", color = LightGray) },
-                    colors = appFieldColors(),
-                    shape = RoundedCornerShape(12.dp)
-                )
-
-                Spacer(Modifier.height(20.dp))
-
-                Text("Langue / اللغة", color = LightGray, fontSize = 14.sp)
-                Spacer(Modifier.height(8.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("en" to "EN", "fr" to "FR", "ar" to "عربي").forEach { (code, name) ->
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(if (currentLang == code) Red else DarkGray)
-                                .clickable { setLang(code) }
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            Text(name, color = White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(s.enableNotifications, color = White, fontSize = 14.sp)
-                    Switch(
-                        checked = enableNotifs,
-                        onCheckedChange = { enableNotifs = it },
-                        colors = SwitchDefaults.colors(checkedTrackColor = Green)
+                    // الاسم
+                    OutlinedTextField(
+                        value = editFirstName,
+                        onValueChange = { editFirstName = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(58.dp),
+                        label = { Text(s.firstName, color = LightGray, fontSize = 14.sp) },
+                        colors = fieldColors,
+                        shape = pillShape,
+                        singleLine = true
                     )
-                }
 
-                Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(14.dp))
 
-                Button(
-                    onClick = {
-                        if (account != null) {
-                            val newImagePath = if (editImageUri != null) {
-                                val str = editImageUri.toString()
-                                if (str.startsWith("content://")) saveUriToInternalStorage(context, editImageUri!!) else str
-                            } else account.imageUri
+                    // اللقب
+                    OutlinedTextField(
+                        value = editLastName,
+                        onValueChange = { editLastName = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(58.dp),
+                        label = { Text(s.lastName, color = LightGray, fontSize = 14.sp) },
+                        colors = fieldColors,
+                        shape = pillShape,
+                        singleLine = true
+                    )
 
-                            val updated = account.copy(
-                                firstName = editFirstName,
-                                lastName = editLastName,
-                                login = editPhone,
-                                imageUri = newImagePath
-                            )
-                            store.updateAccount(updated)
+                    Spacer(Modifier.height(14.dp))
+
+                    // رقم الهاتف / البريد
+                    OutlinedTextField(
+                        value = editPhone,
+                        onValueChange = { editPhone = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(58.dp),
+                        label = { Text(s.emailPhone, color = LightGray, fontSize = 14.sp) },
+                        colors = fieldColors,
+                        shape = pillShape,
+                        singleLine = true
+                    )
+
+                    Spacer(Modifier.height(24.dp))
+
+                    Text(s.language, color = LightGray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(10.dp))
+
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        listOf("en" to "English", "fr" to "Français", "ar" to "العربية").forEach { (code, name) ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(pillShape)
+                                    .background(if (currentLang == code) PinkGradientStart else Color(0xFF281845))
+                                    .clickable { setLang(code) }
+                                    .padding(horizontal = 18.dp, vertical = 10.dp)
+                            ) {
+                                Text(name, color = White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
-                        onBack()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Red),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(s.save, color = White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    }
+
+                    Spacer(Modifier.height(22.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(s.enableNotifications, color = White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                        Switch(
+                            checked = enableNotifs,
+                            onCheckedChange = { enableNotifs = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = White,
+                                checkedTrackColor = GreenAccent,
+                                uncheckedThumbColor = White,
+                                uncheckedTrackColor = Color(0xFF281845)
+                            )
+                        )
+                    }
+
+                    Spacer(Modifier.height(28.dp))
+
+                    Button(
+                        onClick = {
+                            if (account != null) {
+                                val updated = account.copy(
+                                    firstName = editFirstName,
+                                    lastName = editLastName,
+                                    login = editPhone
+                                )
+                                store.updateAccount(updated)
+                            }
+                            onBack()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = PinkGradientStart),
+                        shape = pillShape
+                    ) {
+                        Text(s.save, color = White, fontWeight = FontWeight.Bold, fontSize = 17.sp)
+                    }
                 }
             }
+
+            Spacer(Modifier.height(20.dp))
         }
     }
 }

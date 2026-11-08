@@ -52,7 +52,7 @@ fun generateRandomOrdersList(): List<Order> {
         Pair("Ammi Rachid", AvatarType.OLD_MAN),
         Pair("Nadia Khelil", AvatarType.WOMAN)
     )
-    val orderTypes = listOf("Food / طعام", "Fast Food / وجبات سريعة", "Groceries / بقالة", "Pharmacy / دواء")
+    val orderTypes = listOf("Food", "Fast Food", "Groceries", "Pharmacy")
     val pickups = listOf("Pizza Hut المعاريف", "Tacos de Lyon أنفا", "Burger King غوتييه", "KFC توين سنتر", "McDo عين الذئاب")
     val clients = listOf("شارع أنفا، الدار البيضاء", "حي المعاريف", "شارع غوتييه", "حي بورغون", "عين الذئاب", "حي النخيل")
 
@@ -61,8 +61,8 @@ fun generateRandomOrdersList(): List<Order> {
         Order(
             id = "#" + (10000..99999).random(),
             customerName = name,
-            distanceKm = (1.0 + (6.0 - 1.0) * Math.random()).let { "%.1f".format(it).toDouble() },
-            price = (5.0 + (25.0 - 5.0) * Math.random()).let { "%.2f".format(it).toDouble() },
+            distanceKm = kotlin.math.round((1.0 + (6.0 - 1.0) * Math.random()) * 10) / 10,
+            price = kotlin.math.round((5.0 + (25.0 - 5.0) * Math.random()) * 100) / 100,
             pickup = pickups.random(),
             client = clients.random(),
             orderType = orderTypes.random(),
@@ -79,7 +79,7 @@ fun generateRandomIncomingOrder(): Order {
         Pair("Nour-El-Houda", AvatarType.WOMAN),
         Pair("Bilal Khelil", AvatarType.YOUNG)
     )
-    val orderTypes = listOf("Food / طعام 🍔", "Fast Food / وجبات سريعة 🍕", "Groceries / بقالة 🛒", "Pharmacy / دواء 💊")
+    val orderTypes = listOf("Food 🍔", "Fast Food 🍕", "Groceries 🛒", "Pharmacy 💊")
     val pickups = listOf("Pizza Hut المعاريف", "Tacos de Lyon أنفا", "Burger King غوتييه", "KFC توين سنتر", "McDo عين الذئاب")
     val clients = listOf("شارع أنفا، الدار البيضاء", "حي المعاريف", "شارع غوتييه", "حي بورغون", "عين الذئاب", "حي النخيل")
 
@@ -87,8 +87,8 @@ fun generateRandomIncomingOrder(): Order {
     return Order(
         id = "#HTO" + (10000..99999).random(),
         customerName = name,
-        distanceKm = (1.2 + (7.5 - 1.2) * Math.random()).let { "%.1f".format(it).toDouble() },
-        price = (6.5 + (30.0 - 6.5) * Math.random()).let { "%.2f".format(it).toDouble() },
+        distanceKm = kotlin.math.round((1.2 + (7.5 - 1.2) * Math.random()) * 10) / 10,
+        price = kotlin.math.round((6.5 + (30.0 - 6.5) * Math.random()) * 100) / 100,
         pickup = pickups.random(),
         client = clients.random(),
         orderType = orderTypes.random(),
@@ -96,15 +96,40 @@ fun generateRandomIncomingOrder(): Order {
     )
 }
 
-fun generateRandomReview(): CustomerReview {
-    val comments = listOf(
-        "سائق ممتاز وسريع جداً في التوصيل! شكراً لك 👌",
-        "Super fast delivery, food was still warm and fresh! 🌟",
-        "Service très rapide et livreur très poli. Merci beaucoup! 👍",
-        "توصيل ممتاز وفي الوقت المحدد بالضبط 🚗💨",
-        "خلوق وسريع، أحييك على التعامل الرائع! ❤️",
-        "Très satisfait de la livraison, parfait!"
-    )
+fun generateRandomReview(lang: String = "en"): CustomerReview {
+    val comments = when (lang) {
+        "fr" -> listOf(
+            "Livreur excellent et très rapide dans la livraison ! Merci 👌",
+            "Livraison très rapide, la nourriture était encore chaude ! 🌟",
+            "Service très rapide et livreur très poli. Merci beaucoup ! 👍",
+            "Livraison parfaite et exactement à l'heure 🚗💨",
+            "Livreur très sympathique et efficace. Je recommande ! ❤️",
+            "Très satisfait de la livraison, parfait !"
+        )
+        "ar" -> listOf(
+            "سائق ممتاز وسريع جداً في التوصيل! شكراً لك 👌",
+            "توصيل خيالي، الأكل وصل سخن وطازج! 🌟",
+            "تعامل راقي جداً وسائق محترم، شكراً جزيلاً! 👍",
+            "توصيل ممتاز وفي الوقت المحدد بالضبط 🚗💨",
+            "خلوق وسريع، أحييك على التعامل الرائع! ❤️",
+            "خدمة ممتازة وراضٍ جداً عن التوصيل!"
+        )
+        else -> listOf(
+            "Excellent driver, super fast delivery! Thank you 👌",
+            "Food was delivered fresh and piping hot! 🌟",
+            "Very polite driver and seamless experience. Great job! 👍",
+            "Top tier delivery service, arrived right on time 🚗💨",
+            "Friendly demeanor and fast service. Highly recommended! ❤️",
+            "Extremely satisfied with the delivery, perfect!"
+        )
+    }
+
+    val timeAgoStr = when (lang) {
+        "fr" -> "À l'instant"
+        "ar" -> "الآن"
+        else -> "Just now"
+    }
+
     val names = listOf(
         Pair("Yassine Khelifi", AvatarType.MAN),
         Pair("Sonia Mehdi", AvatarType.WOMAN),
@@ -122,13 +147,27 @@ fun generateRandomReview(): CustomerReview {
         customerName = name,
         rating = ratings.random(),
         comment = comments.random(),
-        timeAgo = "الآن",
+        timeAgo = timeAgoStr,
         avatarType = avatarType
     )
 }
 
-val initialReviewsList = listOf(
-    CustomerReview("#REV101", "Kamel Ouali", 5.0f, "توصيل في القمة وسريع جداً!", "قبل 15 دقيقة", AvatarType.MAN),
-    CustomerReview("#REV102", "Ania Hadj", 4.5f, "Service parfait et livreur très sympa.", "قبل ساعة", AvatarType.WOMAN),
-    CustomerReview("#REV103", "Ammi Ahmed", 5.0f, "ماشاء الله تعامل راقي وسريع.", "قبل ساعتين", AvatarType.OLD_MAN)
-)
+fun getInitialReviewsList(lang: String = "en"): List<CustomerReview> {
+    return when (lang) {
+        "fr" -> listOf(
+            CustomerReview("#REV101", "Kamel Ouali", 5.0f, "Livraison au top et très rapide !", "Il y a 15 min", AvatarType.MAN),
+            CustomerReview("#REV102", "Ania Hadj", 4.5f, "Service parfait et livreur très sympa.", "Il y a 1 heure", AvatarType.WOMAN),
+            CustomerReview("#REV103", "Ammi Ahmed", 5.0f, "Service client impeccable et rapide.", "Il y a 2 heures", AvatarType.OLD_MAN)
+        )
+        "ar" -> listOf(
+            CustomerReview("#REV101", "Kamel Ouali", 5.0f, "توصيل في القمة وسريع جداً!", "قبل 15 دقيقة", AvatarType.MAN),
+            CustomerReview("#REV102", "Ania Hadj", 4.5f, "خدمة ممتازة وسائق خلوق للغاية.", "قبل ساعة", AvatarType.WOMAN),
+            CustomerReview("#REV103", "Ammi Ahmed", 5.0f, "ماشاء الله تعامل راقي وسريع.", "قبل ساعتين", AvatarType.OLD_MAN)
+        )
+        else -> listOf(
+            CustomerReview("#REV101", "Kamel Ouali", 5.0f, "Top quality delivery, super fast!", "15 mins ago", AvatarType.MAN),
+            CustomerReview("#REV102", "Ania Hadj", 4.5f, "Perfect service and very friendly driver.", "1 hour ago", AvatarType.WOMAN),
+            CustomerReview("#REV103", "Ammi Ahmed", 5.0f, "Great customer service and fast delivery.", "2 hours ago", AvatarType.OLD_MAN)
+        )
+    }
+}
